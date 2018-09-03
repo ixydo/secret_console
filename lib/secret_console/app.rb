@@ -37,7 +37,11 @@ module SecretConsole
 
         if childs.size == 1
           link = (request.path_info.split('/') + [childs.first]).join('/')
-          values[childs.first] = Record.new(link, CredStash.get(key))
+          begin
+            values[childs.first] = Record.new(link, CredStash.get(key))
+          rescue
+            values[childs.first] = Record.new(link, "failed to decrypt")
+          end
         else
           link = (request.path_info.split('/') + [childs.first]).join('/')
           links[childs.first] = link
